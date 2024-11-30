@@ -1,35 +1,62 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+	async function handleLogin() {
+		const res = await fetch('http://localhost:5000/api/login', {
+			method: 'POST',
+			credentials: 'include', // Ensures cookies are sent with the request
+			body: JSON.stringify({
+				email: 'soumakkdutta@gmail.com',
+				password: 'Aa@123456',
+			}),
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+		const data = await res.json()
+		localStorage.setItem('access_token', data.token)
+	}
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+	async function handleProfile() {
+		const res = await fetch('http://localhost:5000/api/profile', {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+			},
+		})
+		if (res.status === 401) {
+			return await refreshAccessToken()
+		}
+		const data = await res.json()
+		return data
+	}
+
+	async function refreshAccessToken() {
+		const res1 = await fetch('http://localhost:5000/api/refresh', {
+			method: 'POST',
+			credentials: 'include',
+		})
+		const data = await res1.json()
+		const token = data.token
+		localStorage.setItem('access_token', data.token)
+
+		const res2 = await fetch('http://localhost:5000/api/profile', {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
+			},
+		})
+		return res2.json()
+	}
+
+	return (
+		<>
+			<button onClick={handleLogin}>Login</button>
+			<button onClick={handleProfile}>Profile</button>
+		</>
+	)
 }
 
 export default App
