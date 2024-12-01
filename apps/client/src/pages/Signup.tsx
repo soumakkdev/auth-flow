@@ -1,22 +1,22 @@
-import GithubIcon from '@/assets/GithubIcon'
-import GoogleIcon from '@/assets/GoogleIcon'
 import InputField from '@/components/input/InputField'
 import PasswordField from '@/components/input/PasswordField'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
-import { Mail } from 'lucide-react'
+import { Mail, User2 } from 'lucide-react'
 
-export default function Login() {
+export default function Signup() {
 	return (
 		<div>
 			<div className="mb-12">
-				<h1 className="font-serif text-4xl font-bold text-center">Welcome back</h1>
+				<h1 className="font-serif text-4xl font-bold text-center">Create an Account</h1>
 				<p className="text-sm text-muted-foreground mt-4 text-center">
-					Log in to access your account and stay connected
+					Welcome! Sign up to create your account and start your journey with us
 				</p>
 			</div>
 
 			<div className="space-y-6 max-w-[440px] mx-auto">
+				<InputField id="name" label="Name" placeholder="Enter your name" startIcon={<User2 size={16} />} />
+
 				<InputField
 					id="email"
 					label="Email address"
@@ -27,33 +27,18 @@ export default function Login() {
 				<div className="space-y-3">
 					<div className="flex justify-between items-center">
 						<Label htmlFor="password">Password</Label>
-						<a href="#" className="text-xs underline text-primary">
-							Forgot password?
-						</a>
 					</div>
 					<PasswordField id="password" placeholder="Enter the password" showLockIcon />
 				</div>
 
 				<Button size="lg" className="w-full">
-					Sign in
+					Cerate account
 				</Button>
 
-				<div className="space-y-4">
-					<Button className="w-full" size="lg" variant="outline">
-						<GoogleIcon />
-						<span>Sign in with Google</span>
-					</Button>
-
-					<Button className="w-full" size="lg" variant="outline">
-						<GithubIcon />
-						<span>Sign in with GitHub</span>
-					</Button>
-				</div>
-
 				<p className="text-xs text-center">
-					Don't have an account?{' '}
-					<a href="/signup" className="text-primary underline">
-						Sign up
+					Already have an account?{' '}
+					<a href="/login" className="text-primary underline">
+						Login
 					</a>
 				</p>
 			</div>
