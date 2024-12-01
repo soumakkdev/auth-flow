@@ -3,6 +3,10 @@ export default {
 	darkMode: ['class'],
 	content: ['./index.html', './src/**/*.{ts,tsx,js,jsx}'],
 	theme: {
+		fontFamily: {
+			sans: '"Poppins", sans-serif',
+			serif: '"Kaisei Decol", serif',
+		},
 		extend: {
 			borderRadius: {
 				lg: 'var(--radius)',
