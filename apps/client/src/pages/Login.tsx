@@ -49,14 +49,14 @@ export default function Login() {
 						<span>Sign in with GitHub</span>
 					</Button>
 				</div>
-
-				<p className="text-xs text-center">
-					Don't have an account?{' '}
-					<a href="/signup" className="text-primary underline">
-						Sign up
-					</a>
-				</p>
 			</div>
+
+			<p className="text-sm text-center mt-8">
+				Don't have an account?{' '}
+				<a href="/signup" className="text-primary underline">
+					Sign up
+				</a>
+			</p>
 		</div>
 	)
 }

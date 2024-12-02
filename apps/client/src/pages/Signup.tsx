@@ -34,14 +34,14 @@ export default function Signup() {
 				<Button size="lg" className="w-full">
 					Cerate account
 				</Button>
-
-				<p className="text-xs text-center">
-					Already have an account?{' '}
-					<a href="/login" className="text-primary underline">
-						Login
-					</a>
-				</p>
 			</div>
+
+			<p className="text-sm text-center mt-8">
+				Already have an account?{' '}
+				<a href="/login" className="text-primary underline">
+					Login
+				</a>
+			</p>
 		</div>
 	)
 }
