@@ -1,10 +1,32 @@
 import InputField from '@/components/input/InputField'
 import PasswordField from '@/components/input/PasswordField'
 import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
+import { useForm } from '@tanstack/react-form'
 import { Mail, User2 } from 'lucide-react'
+import { FormEvent } from 'react'
 
 export default function Signup() {
+	const form = useForm({
+		defaultValues: {
+			email: '',
+			password: '',
+		},
+		onSubmit: async ({ value }) => {
+			console.log(value)
+			try {
+				// console.log(res)
+			} catch (error) {
+				console.error(error)
+			}
+		},
+	})
+
+	function handleSubmit(e: FormEvent) {
+		e.preventDefault()
+		e.stopPropagation()
+		form.handleSubmit()
+	}
+
 	return (
 		<div>
 			<div className="mb-12">
@@ -14,7 +36,7 @@ export default function Signup() {
 				</p>
 			</div>
 
-			<div className="space-y-6 max-w-[440px] mx-auto">
+			<form onSubmit={handleSubmit} className="space-y-6 max-w-[440px] mx-auto">
 				<InputField id="name" label="Name" placeholder="Enter your name" startIcon={<User2 size={16} />} />
 
 				<InputField
@@ -24,17 +46,25 @@ export default function Signup() {
 					startIcon={<Mail size={16} />}
 				/>
 
-				<div className="space-y-3">
-					<div className="flex justify-between items-center">
-						<Label htmlFor="password">Password</Label>
-					</div>
-					<PasswordField id="password" placeholder="Enter the password" showLockIcon />
-				</div>
+				<form.Field name="password">
+					{(field) => (
+						<PasswordField
+							label="Password"
+							placeholder="Enter the password"
+							showLockIcon
+							showStrength
+							id={field.name}
+							value={field.state.value}
+							onBlur={field.handleBlur}
+							onChange={(e) => field.handleChange(e.target.value)}
+						/>
+					)}
+				</form.Field>
 
 				<Button size="lg" className="w-full">
 					Cerate account
 				</Button>
-			</div>
+			</form>
 
 			<p className="text-sm text-center mt-8">
 				Already have an account?{' '}
