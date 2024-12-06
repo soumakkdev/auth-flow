@@ -3,7 +3,7 @@ import { Outlet } from 'react-router'
 export default function AuthLayout() {
 	return (
 		<div className="grid grid-cols-3">
-			<figure className="p-4 h-screen w-full">
+			<figure className="p-4 h-screen w-full sticky top-0">
 				<img
 					src="/login-banner.jpg"
 					alt="Login banner image"

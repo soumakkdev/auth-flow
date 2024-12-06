@@ -3,17 +3,20 @@ import Home from './pages/Home'
 import AuthLayout from './pages/AuthLayout'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
+import { AuthProvider } from './lib/AuthContext'
 
 function App() {
 	return (
-		<Routes>
-			<Route index path="/" element={<Home />} />
+		<AuthProvider>
+			<Routes>
+				<Route index path="/" element={<Home />} />
 
-			<Route element={<AuthLayout />}>
-				<Route path="/login" element={<Login />} />
-				<Route path="/signup" element={<Signup />} />
-			</Route>
-		</Routes>
+				<Route element={<AuthLayout />}>
+					<Route path="/login" element={<Login />} />
+					<Route path="/signup" element={<Signup />} />
+				</Route>
+			</Routes>
+		</AuthProvider>
 	)
 }
 

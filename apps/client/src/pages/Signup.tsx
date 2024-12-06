@@ -4,11 +4,13 @@ import { Button } from '@/components/ui/button'
 import { signup } from '@/services/auth.api'
 import { useForm } from '@tanstack/react-form'
 import { Mail, User2 } from 'lucide-react'
-import { FormEvent } from 'react'
-import { Link } from 'react-router'
+import { FormEvent, useState } from 'react'
+import { Link, useNavigate } from 'react-router'
 import { toast } from 'sonner'
 
 export default function Signup() {
+	const [isLoading, setIsLoading] = useState(false)
+	const navigate = useNavigate()
 	const form = useForm({
 		defaultValues: {
 			name: '',
@@ -18,12 +20,17 @@ export default function Signup() {
 		},
 		onSubmit: async ({ value }) => {
 			console.log(value)
+			setIsLoading(true)
 			try {
 				const res = await signup(value.name, value.email, value.password)
+				toast.success('Account created successfully!')
 				console.log(res)
+				navigate('/login')
 			} catch (error: any) {
-				toast(error?.message ?? 'Signup failed. Please try again later')
+				toast.error(error?.message ?? 'Signup failed. Please try again later')
 				console.error(error)
+			} finally {
+				setIsLoading(false)
 			}
 		},
 	})
@@ -35,7 +42,7 @@ export default function Signup() {
 	}
 
 	return (
-		<div>
+		<div className="py-16">
 			<div className="mb-12">
 				<h1 className="font-serif text-4xl font-bold text-center">Create an Account</h1>
 				<p className="text-sm text-muted-foreground mt-4 text-center">
@@ -127,8 +134,8 @@ export default function Signup() {
 					)}
 				</form.Field>
 
-				<Button size="lg" className="w-full">
-					Cerate account
+				<Button loading={isLoading} size="lg" className="w-full">
+					Create account
 				</Button>
 			</form>
 

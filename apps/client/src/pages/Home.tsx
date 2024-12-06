@@ -1,6 +1,8 @@
 import { Button } from '@/components/ui/button'
+import { useAuth } from '@/lib/AuthContext'
 
 export default function Home() {
+	const { profile } = useAuth()
 	return (
 		<div>
 			<div className="relative">
@@ -19,8 +21,8 @@ export default function Home() {
 						</figure>
 
 						<div className="mt-2">
-							<h1 className="text-4xl font-serif font-bold">Soumak Dutta</h1>
-							<p className="mt-2 text-muted-foreground">soumakkdutta@gmail.com</p>
+							<h1 className="text-4xl font-serif font-bold">{profile?.name}</h1>
+							<p className="mt-2 text-muted-foreground">{profile?.email}</p>
 
 							<Button className="mt-4" variant="outline">
 								Logout

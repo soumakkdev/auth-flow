@@ -43,7 +43,7 @@ export async function login(c: Context) {
 			token: accessToken,
 		})
 	} catch (error) {
-		throw new HTTPException(400, { message: 'Signup failed', cause: error })
+		throw new HTTPException(400, { message: 'Login failed', cause: error })
 	}
 }
 

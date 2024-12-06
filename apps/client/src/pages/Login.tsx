@@ -7,22 +7,31 @@ import { Label } from '@/components/ui/label'
 import { login } from '@/services/auth.api'
 import { useForm } from '@tanstack/react-form'
 import { Mail } from 'lucide-react'
-import { FormEvent } from 'react'
-import { Link } from 'react-router'
+import { FormEvent, useState } from 'react'
+import { Link, useNavigate } from 'react-router'
+import { toast } from 'sonner'
 
 export default function Login() {
+	const navigate = useNavigate()
+	const [isLoading, setIsLoading] = useState(false)
+
 	const form = useForm({
 		defaultValues: {
 			email: 'soumakkdutta@gmail.com',
 			password: 'Aa@123456',
 		},
 		onSubmit: async ({ value }) => {
-			console.log(value)
+			setIsLoading(true)
 			try {
 				const res = await login(value.email, value.password)
+				localStorage.setItem('access_token', res.token)
 				console.log(res)
+				navigate('/')
 			} catch (error) {
 				console.error(error)
+				toast.error(error?.message ?? 'Login failed. Please try again later')
+			} finally {
+				setIsLoading(false)
 			}
 		},
 	})
@@ -78,7 +87,7 @@ export default function Login() {
 					</form.Field>
 				</div>
 
-				<Button size="lg" className="w-full">
+				<Button size="lg" className="w-full" loading={isLoading}>
 					Sign in
 				</Button>
 

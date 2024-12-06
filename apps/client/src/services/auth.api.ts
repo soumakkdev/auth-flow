@@ -1,4 +1,4 @@
-function getUrl(url: string) {
+export function getUrl(url: string) {
 	return `${import.meta.env.VITE_SERVER_URL}/${url}`
 }
 
@@ -14,6 +14,12 @@ export async function login(email: string, password: string) {
 			'Content-Type': 'application/json',
 		},
 	})
+
+	if (!res.ok) {
+		const error = await res.json()
+		throw new Error(error.error ?? 'An unexpected error occurred')
+	}
+
 	return await res.json()
 }
 
@@ -33,7 +39,7 @@ export async function signup(name: string, email: string, password: string) {
 
 	if (!res.ok) {
 		const error = await res.json()
-		throw new Error(error.error ?? 'An unexpected error occurred during signup')
+		throw new Error(error.error ?? 'An unexpected error occurred')
 	}
 
 	return await res.json()
