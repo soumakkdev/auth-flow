@@ -6,6 +6,7 @@ import { Label } from '../ui/label'
 
 interface PasswordFieldProps extends React.ComponentProps<'input'> {
 	label?: string
+	error?: string
 	showLockIcon?: boolean
 	showStrength?: boolean
 }
@@ -13,7 +14,7 @@ interface PasswordFieldProps extends React.ComponentProps<'input'> {
 const passwordMaxStrength = 5
 
 const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
-	({ label, className, showLockIcon, showStrength, id, ...props }, ref) => {
+	({ label, className, showLockIcon, showStrength, id, error, ...props }, ref) => {
 		const [passwordVisible, setPasswordVisible] = useState(false)
 
 		const password = props.value as string
@@ -69,6 +70,8 @@ const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
 						></div>
 					</div>
 				) : null}
+
+				{error ? <p className="text-red-600 text-xs">{error}</p> : null}
 			</div>
 		)
 	}

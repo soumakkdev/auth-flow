@@ -6,13 +6,15 @@ import { Label } from '../ui/label'
 interface InputFieldProps extends React.ComponentProps<'input'> {
 	label?: string
 	startIcon?: ReactNode
+	error?: string
 }
 
 const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
-	({ label, className, startIcon, id, ...props }, ref) => {
+	({ label, className, startIcon, id, error, ...props }, ref) => {
 		return (
 			<div className="space-y-2">
 				{label ? <Label htmlFor={id}>{label}</Label> : null}
+
 				<div className="relative">
 					<Input ref={ref} className={cn(className, { 'ps-12': startIcon })} id={id} {...props} />
 
@@ -22,6 +24,8 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
 						</div>
 					) : null}
 				</div>
+
+				{error ? <p className="text-red-600 text-xs">{error}</p> : null}
 			</div>
 		)
 	}

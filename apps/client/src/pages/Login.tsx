@@ -8,6 +8,7 @@ import { login } from '@/services/auth.api'
 import { useForm } from '@tanstack/react-form'
 import { Mail } from 'lucide-react'
 import { FormEvent } from 'react'
+import { Link } from 'react-router'
 
 export default function Login() {
 	const form = useForm({
@@ -96,9 +97,9 @@ export default function Login() {
 
 			<p className="text-sm text-center mt-8">
 				Don't have an account?{' '}
-				<a href="/signup" className="text-primary underline">
+				<Link to="/signup" className="text-primary underline">
 					Sign up
-				</a>
+				</Link>
 			</p>
 		</div>
 	)

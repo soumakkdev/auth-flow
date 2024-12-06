@@ -1,21 +1,28 @@
 import InputField from '@/components/input/InputField'
 import PasswordField from '@/components/input/PasswordField'
 import { Button } from '@/components/ui/button'
+import { signup } from '@/services/auth.api'
 import { useForm } from '@tanstack/react-form'
 import { Mail, User2 } from 'lucide-react'
 import { FormEvent } from 'react'
+import { Link } from 'react-router'
+import { toast } from 'sonner'
 
 export default function Signup() {
 	const form = useForm({
 		defaultValues: {
+			name: '',
 			email: '',
 			password: '',
+			cPassword: '',
 		},
 		onSubmit: async ({ value }) => {
 			console.log(value)
 			try {
-				// console.log(res)
-			} catch (error) {
+				const res = await signup(value.name, value.email, value.password)
+				console.log(res)
+			} catch (error: any) {
+				toast(error?.message ?? 'Signup failed. Please try again later')
 				console.error(error)
 			}
 		},
@@ -37,16 +44,52 @@ export default function Signup() {
 			</div>
 
 			<form onSubmit={handleSubmit} className="space-y-6 max-w-[440px] mx-auto">
-				<InputField id="name" label="Name" placeholder="Enter your name" startIcon={<User2 size={16} />} />
+				<form.Field
+					name="name"
+					validators={{
+						onSubmit: ({ value }) => (!value ? 'Name is a required field' : undefined),
+					}}
+				>
+					{(field) => (
+						<InputField
+							id={field.name}
+							label="Name"
+							placeholder="Enter your name"
+							startIcon={<User2 size={16} />}
+							value={field.state.value}
+							onBlur={field.handleBlur}
+							onChange={(e) => field.handleChange(e.target.value)}
+							error={field.state.meta.errors.join(', ')}
+						/>
+					)}
+				</form.Field>
 
-				<InputField
-					id="email"
-					label="Email address"
-					placeholder="Enter your email address"
-					startIcon={<Mail size={16} />}
-				/>
+				<form.Field
+					name="email"
+					validators={{
+						onSubmit: ({ value }) => (!value ? 'Email is a required field' : undefined),
+					}}
+				>
+					{(field) => (
+						<InputField
+							id={field.name}
+							label="Email address"
+							placeholder="Enter your email address"
+							startIcon={<Mail size={16} />}
+							value={field.state.value}
+							onBlur={field.handleBlur}
+							onChange={(e) => field.handleChange(e.target.value)}
+							error={field.state.meta.errors.join(', ')}
+						/>
+					)}
+				</form.Field>
 
-				<form.Field name="password">
+				<form.Field
+					name="password"
+					validators={{
+						onSubmit: ({ value }) => (!value ? 'Password is a required field' : undefined),
+					}}
+				>
 					{(field) => (
 						<PasswordField
 							label="Password"
@@ -57,6 +100,29 @@ export default function Signup() {
 							value={field.state.value}
 							onBlur={field.handleBlur}
 							onChange={(e) => field.handleChange(e.target.value)}
+							error={field.state.meta.errors.join(', ')}
+						/>
+					)}
+				</form.Field>
+
+				<form.Field
+					name="cPassword"
+					validators={{
+						onChange: ({ value, fieldApi }) => {
+							if (fieldApi.form.state.values.password !== value) return "Password doesn't match"
+						},
+					}}
+				>
+					{(field) => (
+						<PasswordField
+							label="Confirm Password"
+							placeholder="Enter the password again"
+							showLockIcon
+							id={field.name}
+							value={field.state.value}
+							onBlur={field.handleBlur}
+							onChange={(e) => field.handleChange(e.target.value)}
+							error={field.state.meta.errors.join(', ')}
 						/>
 					)}
 				</form.Field>
@@ -68,9 +134,9 @@ export default function Signup() {
 
 			<p className="text-sm text-center mt-8">
 				Already have an account?{' '}
-				<a href="/login" className="text-primary underline">
+				<Link to="/login" className="text-primary underline">
 					Login
-				</a>
+				</Link>
 			</p>
 		</div>
 	)

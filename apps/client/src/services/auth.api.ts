@@ -16,3 +16,25 @@ export async function login(email: string, password: string) {
 	})
 	return await res.json()
 }
+
+export async function signup(name: string, email: string, password: string) {
+	const res = await fetch(getUrl('api/signup'), {
+		method: 'POST',
+		credentials: 'include', // Ensures cookies are sent with the request
+		body: JSON.stringify({
+			name,
+			email,
+			password,
+		}),
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	})
+
+	if (!res.ok) {
+		const error = await res.json()
+		throw new Error(error.error ?? 'An unexpected error occurred during signup')
+	}
+
+	return await res.json()
+}
