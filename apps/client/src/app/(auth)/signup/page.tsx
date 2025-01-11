@@ -1,16 +1,17 @@
+'use client'
+
 import InputField from '@/components/input/InputField'
 import PasswordField from '@/components/input/PasswordField'
 import { Button } from '@/components/ui/button'
 import { signup } from '@/services/auth.api'
 import { useForm } from '@tanstack/react-form'
 import { Mail, User2 } from 'lucide-react'
+import Link from 'next/link'
 import { FormEvent, useState } from 'react'
-import { Link, useNavigate } from 'react-router'
 import { toast } from 'sonner'
 
 export default function Signup() {
 	const [isLoading, setIsLoading] = useState(false)
-	const navigate = useNavigate()
 	const form = useForm({
 		defaultValues: {
 			name: '',
@@ -25,7 +26,7 @@ export default function Signup() {
 				const res = await signup(value.name, value.email, value.password)
 				toast.success('Account created successfully!')
 				console.log(res)
-				navigate('/login')
+				// navigate('/login')
 			} catch (error: any) {
 				toast.error(error?.message ?? 'Signup failed. Please try again later')
 				console.error(error)
@@ -141,7 +142,7 @@ export default function Signup() {
 
 			<p className="text-sm text-center mt-8">
 				Already have an account?{' '}
-				<Link to="/login" className="text-primary underline">
+				<Link href="/login" className="text-primary underline">
 					Login
 				</Link>
 			</p>

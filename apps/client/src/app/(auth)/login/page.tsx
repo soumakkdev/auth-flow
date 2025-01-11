@@ -1,3 +1,5 @@
+'use client'
+
 import GithubIcon from '@/assets/GithubIcon'
 import GoogleIcon from '@/assets/GoogleIcon'
 import InputField from '@/components/input/InputField'
@@ -8,11 +10,10 @@ import { Label } from '@/components/ui/label'
 import { login } from '@/services/auth.api'
 import { useForm } from '@tanstack/react-form'
 import { AlertCircle, Mail } from 'lucide-react'
+import Link from 'next/link'
 import { FormEvent, useState } from 'react'
-import { Link, useNavigate } from 'react-router'
 
 export default function Login() {
-	const navigate = useNavigate()
 	const [isLoading, setIsLoading] = useState(false)
 	const [error, setError] = useState('')
 
@@ -28,7 +29,7 @@ export default function Login() {
 				const res = await login(value.email, value.password)
 				localStorage.setItem('access_token', res.token)
 				console.log(res)
-				navigate('/')
+				// navigate('/')
 			} catch (error: any) {
 				setError(error?.message)
 			} finally {
@@ -114,7 +115,7 @@ export default function Login() {
 
 			<p className="text-sm text-center mt-8">
 				Don't have an account?{' '}
-				<Link to="/signup" className="text-primary underline">
+				<Link href="/signup" className="text-primary underline">
 					Sign up
 				</Link>
 			</p>

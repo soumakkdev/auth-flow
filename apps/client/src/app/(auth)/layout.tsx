@@ -1,6 +1,6 @@
-import { Outlet } from 'react-router'
+import React, { ReactNode } from 'react'
 
-export default function AuthLayout() {
+export default function AuthLayout({ children }: { children: ReactNode }) {
 	return (
 		<div className="grid grid-cols-3">
 			<figure className="p-4 h-screen w-full sticky top-0">
@@ -11,9 +11,7 @@ export default function AuthLayout() {
 				/>
 			</figure>
 			<div className="col-span-2 h-full">
-				<div className="h-full grid place-content-center">
-					<Outlet />
-				</div>
+				<div className="h-full grid place-content-center">{children}</div>
 			</div>
 		</div>
 	)
