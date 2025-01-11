@@ -11,9 +11,11 @@ import { login } from '@/services/auth.api'
 import { useForm } from '@tanstack/react-form'
 import { AlertCircle, Mail } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { FormEvent, useState } from 'react'
 
 export default function Login() {
+	const router = useRouter()
 	const [isLoading, setIsLoading] = useState(false)
 	const [error, setError] = useState('')
 
@@ -28,8 +30,7 @@ export default function Login() {
 			try {
 				const res = await login(value.email, value.password)
 				localStorage.setItem('access_token', res.token)
-				console.log(res)
-				// navigate('/')
+				router.push('/')
 			} catch (error: any) {
 				setError(error?.message)
 			} finally {

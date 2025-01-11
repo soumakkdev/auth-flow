@@ -2,16 +2,20 @@
 
 import InputField from '@/components/input/InputField'
 import PasswordField from '@/components/input/PasswordField'
+import { Alert, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { signup } from '@/services/auth.api'
 import { useForm } from '@tanstack/react-form'
-import { Mail, User2 } from 'lucide-react'
+import { AlertCircle, Mail, User2 } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { FormEvent, useState } from 'react'
-import { toast } from 'sonner'
 
 export default function Signup() {
+	const router = useRouter()
 	const [isLoading, setIsLoading] = useState(false)
+	const [error, setError] = useState('')
+
 	const form = useForm({
 		defaultValues: {
 			name: '',
@@ -20,16 +24,13 @@ export default function Signup() {
 			cPassword: '',
 		},
 		onSubmit: async ({ value }) => {
-			console.log(value)
 			setIsLoading(true)
+			setError('')
 			try {
 				const res = await signup(value.name, value.email, value.password)
-				toast.success('Account created successfully!')
-				console.log(res)
-				// navigate('/login')
+				router.push('/login')
 			} catch (error: any) {
-				toast.error(error?.message ?? 'Signup failed. Please try again later')
-				console.error(error)
+				setError(error?.message)
 			} finally {
 				setIsLoading(false)
 			}
@@ -52,6 +53,13 @@ export default function Signup() {
 			</div>
 
 			<form onSubmit={handleSubmit} className="space-y-6 max-w-[440px] mx-auto">
+				{error ? (
+					<Alert variant="error">
+						<AlertCircle className="h-4 w-4" />
+						<AlertTitle>{error}</AlertTitle>
+					</Alert>
+				) : null}
+
 				<form.Field
 					name="name"
 					validators={{

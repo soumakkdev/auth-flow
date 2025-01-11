@@ -121,12 +121,12 @@ export async function verifyEmailController(c: Context) {
 		where: { email: user.email },
 		data: {
 			isVerified: true,
-			verificationToken: undefined,
-			tokenExpiry: undefined,
+			verificationToken: { unset: true },
+			tokenExpiry: { unset: true },
 		},
 	})
 
-	return c.json({ success: true })
+	return c.json({ success: true, message: 'Email verified successfully' })
 }
 
 export async function refreshToken(c: Context) {
