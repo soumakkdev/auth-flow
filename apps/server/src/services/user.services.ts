@@ -31,6 +31,8 @@ export default class UserServices {
 				email: user.email,
 				name: user.name,
 				password: user.password,
+				verificationToken: user?.verificationToken,
+				tokenExpiry: user?.tokenExpiry,
 			},
 		})
 	}

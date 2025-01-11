@@ -2,18 +2,19 @@ import GithubIcon from '@/assets/GithubIcon'
 import GoogleIcon from '@/assets/GoogleIcon'
 import InputField from '@/components/input/InputField'
 import PasswordField from '@/components/input/PasswordField'
+import { Alert, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { login } from '@/services/auth.api'
 import { useForm } from '@tanstack/react-form'
-import { Mail } from 'lucide-react'
+import { AlertCircle, Mail } from 'lucide-react'
 import { FormEvent, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
-import { toast } from 'sonner'
 
 export default function Login() {
 	const navigate = useNavigate()
 	const [isLoading, setIsLoading] = useState(false)
+	const [error, setError] = useState('')
 
 	const form = useForm({
 		defaultValues: {
@@ -22,14 +23,14 @@ export default function Login() {
 		},
 		onSubmit: async ({ value }) => {
 			setIsLoading(true)
+			setError('')
 			try {
 				const res = await login(value.email, value.password)
 				localStorage.setItem('access_token', res.token)
 				console.log(res)
 				navigate('/')
-			} catch (error) {
-				console.error(error)
-				toast.error(error?.message ?? 'Login failed. Please try again later')
+			} catch (error: any) {
+				setError(error?.message)
 			} finally {
 				setIsLoading(false)
 			}
@@ -52,6 +53,13 @@ export default function Login() {
 			</div>
 
 			<form className="space-y-6 max-w-[440px] mx-auto" onSubmit={handleSubmit}>
+				{error ? (
+					<Alert variant="error">
+						<AlertCircle className="h-4 w-4" />
+						<AlertTitle>{error}</AlertTitle>
+					</Alert>
+				) : null}
+
 				<form.Field name="email">
 					{(field) => (
 						<InputField

@@ -11,6 +11,10 @@ export const ZSignupReqBody = z.object({
 	password: z.string().min(8),
 })
 
+export const ZVerifyEmailReqBody = z.object({
+	token: z.string(),
+})
+
 const ZUser = z.object({
 	id: z.string(),
 	name: z.string(),
@@ -25,5 +29,7 @@ const ZCreateUser = z.object({
 	name: z.string(),
 	email: z.string().email(),
 	password: z.string(),
+	verificationToken: z.string().optional(),
+	tokenExpiry: z.number().optional(),
 })
 export type ICreateUser = z.infer<typeof ZCreateUser>

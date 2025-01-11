@@ -4,21 +4,31 @@ import { getCookie, setCookie } from 'hono/cookie'
 import { HTTPException } from 'hono/http-exception'
 import { generateToken, verifyToken } from '../lib/jwt.ts'
 import UserServices from '../services/user.services.ts'
+import sgMail from '@sendgrid/mail'
+import { generateNanoid } from '../lib/helpers.ts'
+import prisma from '../lib/prisma.ts'
 
-export async function login(c: Context) {
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+
+export async function loginController(c: Context) {
 	try {
 		const { email, password } = await c.req.json()
 
 		// check user exists or not
 		const user = await UserServices.getUserByEmail(email)
 		if (!user) {
-			throw new HTTPException(400, { message: "Login failed! User doesn't exists" })
+			throw new HTTPException(400, { message: 'Incorrect username or password' })
 		}
 
 		// validate password
 		const isValidPassword = await bcrypt.compare(password, user.password)
 		if (!isValidPassword) {
-			throw new HTTPException(401, { message: 'Login failed! Invalid credentials' })
+			throw new HTTPException(401, { message: 'Incorrect username or password' })
+		}
+
+		// check if email is verified
+		if (!user?.isVerified) {
+			throw new HTTPException(401, { message: 'Email is not verified yet' })
 		}
 
 		// generate access and refresh token
@@ -42,13 +52,14 @@ export async function login(c: Context) {
 			success: true,
 			token: accessToken,
 		})
-	} catch (error) {
-		throw new HTTPException(400, { message: 'Login failed', cause: error })
+	} catch (error: any) {
+		throw new HTTPException(400, { message: error?.message ?? 'Login failed. Please try again' })
 	}
 }
 
-export async function signup(c: Context) {
+export async function signupController(c: Context) {
 	const { name, email, password } = await c.req.json()
+	const verificationToken = generateNanoid()
 
 	// check if user already exists or not
 	const user = await UserServices.getUserByEmail(email)
@@ -66,11 +77,54 @@ export async function signup(c: Context) {
 			name,
 			email,
 			password: hashedPassword,
+			verificationToken,
+			tokenExpiry: Date.now() + 3600000, // 1hour
 		}
 		await UserServices.createUser(newUser)
 	} catch (error) {
 		throw new HTTPException(400, { message: 'Signup failed' })
 	}
+
+	// send mail
+	const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`
+	const message = {
+		to: email,
+		from: {
+			name: 'AuthFlow',
+			email: 'authflow@yopmail.com',
+		},
+		subject: 'Verify your email address',
+		html: `<p>Click the link below to verify your email</p>
+		<a href="${verificationLink}">${verificationLink}</a>`,
+	}
+	await sgMail.send(message)
+
+	return c.json({ success: true })
+}
+
+export async function verifyEmailController(c: Context) {
+	const { token } = await c.req.json()
+
+	// check if token exists in user
+	const user = await prisma.users.findFirst({
+		where: {
+			verificationToken: token,
+		},
+	})
+
+	// check if token expires or not
+	if (!user || user.tokenExpiry < Date.now()) {
+		throw new HTTPException(400, { message: 'Invalid or expired token' })
+	}
+
+	await prisma.users.update({
+		where: { email: user.email },
+		data: {
+			isVerified: true,
+			verificationToken: undefined,
+			tokenExpiry: undefined,
+		},
+	})
 
 	return c.json({ success: true })
 }
