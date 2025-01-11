@@ -1,4 +1,6 @@
+import InfoText from '@/components/InfoText'
 import { Button } from '@/components/ui/button'
+import { Pencil } from 'lucide-react'
 
 export default function Home() {
 	return (
@@ -25,6 +27,40 @@ export default function Home() {
 							<Button className="mt-4" variant="outline">
 								Logout
 							</Button>
+						</div>
+					</div>
+
+					<div className="border rounded-2xl p-8">
+						<div className="flex items-center justify-between mb-8">
+							<h2 className="font-medium text-lg">Profile Information</h2>
+							<Pencil className="h-5 w-5" />
+						</div>
+
+						<div className="grid grid-cols-2 gap-6">
+							<div className="col-span-2">
+								<InfoText label="Full Name" text="Soumak Dutta" />
+							</div>
+							<InfoText label="Email address" text="soumak@yopmail.com" />
+							<InfoText label="Phone No" text="+91 76995 98595" />
+							<InfoText label="Date of birth" text="5th Sept, 1934" />
+							<InfoText label="Gender" text="Male" />
+						</div>
+					</div>
+
+					<div className="border rounded-2xl p-8 my-10">
+						<div className="flex items-center justify-between mb-8">
+							<h2 className="font-medium text-lg">Address Information</h2>
+							<Pencil className="h-5 w-5" />
+						</div>
+
+						<div className="grid grid-cols-2 gap-6">
+							<div className="col-span-2">
+								<InfoText label="Address" text="2nd street, bose colony" />
+							</div>
+							<InfoText label="City" text="Kolkata" />
+							<InfoText label="State" text="West Bengal" />
+							<InfoText label="Zip code" text="745484" />
+							<InfoText label="Country" text="India" />
 						</div>
 					</div>
 				</div>

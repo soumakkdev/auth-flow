@@ -1,4 +1,5 @@
 import { verifyEmail } from '@/services/auth.api'
+import { redirect } from 'next/navigation'
 import React from 'react'
 
 export default async function VerifyEmail({ searchParams }: { searchParams: Promise<{ token: string }> }) {
@@ -6,6 +7,7 @@ export default async function VerifyEmail({ searchParams }: { searchParams: Prom
 
 	try {
 		const res = await verifyEmail(token)
+		// redirect('/onboarding')
 		return (
 			<div className="min-h-svh grid place-content-center">
 				<p className="font-serif text-2xl">Email verified successfully!</p>
