@@ -3,9 +3,11 @@ import { getUrl } from '@/services/auth.api'
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 import nookies from 'nookies'
 import { Loader } from 'lucide-react'
+import { IUser } from '@/types/user.types'
 
 interface IAuthContext {
-	user: any
+	user: IUser | null
+	loading: boolean
 }
 
 const AuthContext = createContext<IAuthContext>({} as IAuthContext)

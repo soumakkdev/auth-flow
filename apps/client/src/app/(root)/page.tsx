@@ -1,11 +1,26 @@
 'use client'
-import InfoText from '@/components/InfoText'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/lib/AuthContext'
-import { Pencil } from 'lucide-react'
+import AddressInfo from '@/modules/profile/AddressInfo'
+import PersonalInfo from '@/modules/profile/PersonalInfo'
+import { logout } from '@/services/auth.api'
+import { useRouter } from 'next/navigation'
+import nookies from 'nookies'
 
 export default function Home() {
-	const { user } = useAuth()
+	const { user, loading } = useAuth()
+	const router = useRouter()
+
+	async function handleLogout() {
+		await logout()
+		nookies.destroy(null, 'access_token')
+		router.push('/login')
+	}
+
+	if (!user) {
+		return null
+	}
+
 	return (
 		<div>
 			<div className="relative">
@@ -27,45 +42,15 @@ export default function Home() {
 							<h1 className="text-4xl font-serif font-bold">{user?.name}</h1>
 							<p className="mt-2 text-muted-foreground">{user?.email}</p>
 
-							<Button className="mt-4" variant="outline">
+							<Button className="mt-4" variant="outline" onClick={handleLogout}>
 								Logout
 							</Button>
 						</div>
 					</div>
 
-					<div className="border rounded-2xl p-8">
-						<div className="flex items-center justify-between mb-8">
-							<h2 className="font-medium text-lg">Profile Information</h2>
-							<Pencil className="h-5 w-5" />
-						</div>
+					<PersonalInfo user={user} />
 
-						<div className="grid grid-cols-2 gap-6">
-							<div className="col-span-2">
-								<InfoText label="Full Name" text={user?.name} />
-							</div>
-							<InfoText label="Email address" text={user?.email} />
-							<InfoText label="Phone No" text="+91 76995 98595" />
-							<InfoText label="Date of birth" text="5th Sept, 1934" />
-							<InfoText label="Gender" text="Male" />
-						</div>
-					</div>
-
-					<div className="border rounded-2xl p-8 my-10">
-						<div className="flex items-center justify-between mb-8">
-							<h2 className="font-medium text-lg">Address Information</h2>
-							<Pencil className="h-5 w-5" />
-						</div>
-
-						<div className="grid grid-cols-2 gap-6">
-							<div className="col-span-2">
-								<InfoText label="Address" text="2nd street, bose colony" />
-							</div>
-							<InfoText label="City" text="Kolkata" />
-							<InfoText label="State" text="West Bengal" />
-							<InfoText label="Zip code" text="745484" />
-							<InfoText label="Country" text="India" />
-						</div>
-					</div>
+					<AddressInfo profile={user?.profile} />
 				</div>
 			</div>
 		</div>

@@ -4,7 +4,15 @@ import { Button } from '@/components/ui/button'
 import { ReactFormExtendedApi } from '@tanstack/react-form'
 import React from 'react'
 
-export default function AddressForm({ form, onBack }: { form: ReactFormExtendedApi<IFormData>; onBack: () => void }) {
+export default function AddressForm({
+	form,
+	onBack,
+	isSubmitting,
+}: {
+	form: ReactFormExtendedApi<IFormData>
+	onBack: () => void
+	isSubmitting: boolean
+}) {
 	return (
 		<div className="max-w-[440px] mx-auto py-12">
 			<div className="mb-12">
@@ -84,7 +92,7 @@ export default function AddressForm({ form, onBack }: { form: ReactFormExtendedA
 			</div>
 
 			<div className="space-y-4 mt-6">
-				<Button size="lg" className="w-full" type="submit">
+				<Button size="lg" className="w-full" type="submit" loading={isSubmitting}>
 					Next
 				</Button>
 

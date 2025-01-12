@@ -1,4 +1,5 @@
 'use client'
+import { authFetch } from '@/lib/utils'
 import AddressForm from '@/modules/onboarding/AddressForm'
 import BasicInfoForm from '@/modules/onboarding/BasicInfoForm'
 import { useForm } from '@tanstack/react-form'
@@ -18,6 +19,7 @@ export interface IFormData {
 export default function OnboardingPage() {
 	const router = useRouter()
 	const [currentStep, setCurrentStep] = useState(0)
+	const [isLoading, setIsLoading] = useState(false)
 
 	function handleNextStep() {
 		setCurrentStep((c) => c + 1)
@@ -37,8 +39,17 @@ export default function OnboardingPage() {
 			zipCode: '',
 			country: '',
 		},
-		onSubmit: ({ value }) => {
-			console.log(value)
+		onSubmit: async ({ value }) => {
+			try {
+				setIsLoading(true)
+				const res = await authFetch('api/edit-profile', 'POST', value)
+				console.log(res)
+				router.push('/')
+			} catch (error) {
+				console.log(error)
+			} finally {
+				setIsLoading(false)
+			}
 		},
 	})
 
@@ -53,7 +64,7 @@ export default function OnboardingPage() {
 			{currentStep === 0 ? (
 				<BasicInfoForm form={form} onNext={handleNextStep} onSkip={() => router.push('/')} />
 			) : (
-				<AddressForm form={form} onBack={handlePrevStep} />
+				<AddressForm form={form} onBack={handlePrevStep} isSubmitting={isLoading} />
 			)}
 		</form>
 	)

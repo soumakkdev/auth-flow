@@ -35,7 +35,7 @@ model Profile {
   city    String?
   state   String?
   zipCode String?
-  country String
+  country String?
 
   user   User   @relation(fields: [userId], references: [id])
   userId String @unique @db.ObjectId

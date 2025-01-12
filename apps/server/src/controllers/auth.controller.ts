@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 import type { Context } from 'hono'
-import { getCookie, setCookie } from 'hono/cookie'
+import { getCookie, setCookie, deleteCookie } from 'hono/cookie'
 import { HTTPException } from 'hono/http-exception'
 import { generateToken, verifyToken } from '../lib/jwt.ts'
 import UserServices from '../services/user.services.ts'
@@ -171,4 +171,14 @@ export async function refreshToken(c: Context) {
 		// invalid refresh token
 		throw new HTTPException(401, { message: 'Invalid token' })
 	}
+}
+
+export async function logoutController(c: Context) {
+	await deleteCookie(c, 'refresh_token', {
+		path: '/',
+		secure: true,
+		httpOnly: true,
+		sameSite: 'Strict',
+	})
+	return c.json({ success: true })
 }
