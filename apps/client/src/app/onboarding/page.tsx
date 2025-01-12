@@ -2,6 +2,7 @@
 import AddressForm from '@/modules/onboarding/AddressForm'
 import BasicInfoForm from '@/modules/onboarding/BasicInfoForm'
 import { useForm } from '@tanstack/react-form'
+import { useRouter } from 'next/navigation'
 import { FormEvent, useState } from 'react'
 
 export interface IFormData {
@@ -15,6 +16,7 @@ export interface IFormData {
 }
 
 export default function OnboardingPage() {
+	const router = useRouter()
 	const [currentStep, setCurrentStep] = useState(0)
 
 	function handleNextStep() {
@@ -49,7 +51,7 @@ export default function OnboardingPage() {
 	return (
 		<form onSubmit={handleSubmit}>
 			{currentStep === 0 ? (
-				<BasicInfoForm form={form} onNext={handleNextStep} />
+				<BasicInfoForm form={form} onNext={handleNextStep} onSkip={() => router.push('/')} />
 			) : (
 				<AddressForm form={form} onBack={handlePrevStep} />
 			)}

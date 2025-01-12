@@ -31,9 +31,9 @@ export default function PhoneField({ placeholder, value, onChange, id, onBlur, l
 		<div className="space-y-2">
 			{label ? <Label htmlFor={id}>{label}</Label> : null}
 
-			<div className="border flex items-center gap-3 rounded-xl px-5 focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
+			<div className="border flex items-center rounded-xl focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
 				<Select value={country.iso2} onValueChange={(value) => setCountry(value)}>
-					<SelectTrigger className="border-0 w-16 p-0 focus:ring-0 focus:ring-offset-0">
+					<SelectTrigger className="border-0 w-16 p-0 focus:ring-0 focus:ring-offset-0 ml-5">
 						<SelectValue>
 							<FlagImage iso2={country.iso2} />
 						</SelectValue>
@@ -54,7 +54,7 @@ export default function PhoneField({ placeholder, value, onChange, id, onBlur, l
 					</SelectContent>
 				</Select>
 
-				<div className="h-8 w-[1px] bg-border"></div>
+				<div className="h-8 w-[1px] ml-3 bg-border"></div>
 
 				<Input
 					id={id}
@@ -64,7 +64,7 @@ export default function PhoneField({ placeholder, value, onChange, id, onBlur, l
 					type="tel"
 					value={inputValue}
 					onChange={handlePhoneValueChange}
-					className="border-0 px-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+					className="border-0 pl-3 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-tl-none rounded-bl-none"
 				/>
 			</div>
 

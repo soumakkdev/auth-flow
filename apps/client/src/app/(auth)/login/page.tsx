@@ -13,6 +13,7 @@ import { AlertCircle, Mail } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { FormEvent, useState } from 'react'
+import nookies from 'nookies'
 
 export default function Login() {
 	const router = useRouter()
@@ -29,7 +30,7 @@ export default function Login() {
 			setError('')
 			try {
 				const res = await login(value.email, value.password)
-				localStorage.setItem('access_token', res.token)
+				nookies.set(null, 'access_token', res.token)
 				router.push('/')
 			} catch (error: any) {
 				setError(error?.message)

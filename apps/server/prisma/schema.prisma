@@ -13,7 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Users {
+model User {
   id                String   @id @default(auto()) @map("_id") @db.ObjectId
   name              String
   email             String   @unique
@@ -23,4 +23,20 @@ model Users {
   verificationToken String?
   tokenExpiry       Int?
   isVerified        Boolean  @default(false)
+  profile           Profile?
+}
+
+model Profile {
+  id    String  @id @default(auto()) @map("_id") @db.ObjectId
+  phone String?
+  dob   String?
+
+  address String?
+  city    String?
+  state   String?
+  zipCode String?
+  country String
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique @db.ObjectId
 }

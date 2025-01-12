@@ -17,13 +17,13 @@ export async function loginController(c: Context) {
 		// check user exists or not
 		const user = await UserServices.getUserByEmail(email)
 		if (!user) {
-			throw new HTTPException(400, { message: 'Incorrect username or password' })
+			throw new HTTPException(400, { message: 'Incorrect email or password' })
 		}
 
 		// validate password
 		const isValidPassword = await bcrypt.compare(password, user.password)
 		if (!isValidPassword) {
-			throw new HTTPException(401, { message: 'Incorrect username or password' })
+			throw new HTTPException(401, { message: 'Incorrect email or password' })
 		}
 
 		// check if email is verified
@@ -106,7 +106,7 @@ export async function verifyEmailController(c: Context) {
 	const { token } = await c.req.json()
 
 	// check if token exists in user
-	const user = await prisma.users.findFirst({
+	const user = await prisma.user.findFirst({
 		where: {
 			verificationToken: token,
 		},
@@ -117,7 +117,7 @@ export async function verifyEmailController(c: Context) {
 		throw new HTTPException(400, { message: 'Invalid or expired token' })
 	}
 
-	await prisma.users.update({
+	await prisma.user.update({
 		where: { email: user.email },
 		data: {
 			isVerified: true,
@@ -126,7 +126,27 @@ export async function verifyEmailController(c: Context) {
 		},
 	})
 
-	return c.json({ success: true, message: 'Email verified successfully' })
+	// generate access and refresh token
+	const payload = {
+		userId: user.id,
+	}
+	const accessToken = await generateToken(payload, 30) // expired in 30 min
+	const refreshToken = await generateToken(payload, 60 * 24) // expired in 1 day
+
+	// set refresh token in cookie
+	// const signature = process.env.COOKIE_SIGNATURE as string
+	await setCookie(c, 'refresh_token', refreshToken, {
+		path: '/',
+		secure: true,
+		httpOnly: true,
+		maxAge: 60 * 60 * 24 * 1, // 1 day
+		sameSite: 'Strict',
+	})
+
+	return c.json({
+		success: true,
+		token: accessToken,
+	})
 }
 
 export async function refreshToken(c: Context) {

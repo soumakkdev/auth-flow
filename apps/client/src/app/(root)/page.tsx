@@ -1,8 +1,11 @@
+'use client'
 import InfoText from '@/components/InfoText'
 import { Button } from '@/components/ui/button'
+import { useAuth } from '@/lib/AuthContext'
 import { Pencil } from 'lucide-react'
 
 export default function Home() {
+	const { user } = useAuth()
 	return (
 		<div>
 			<div className="relative">
@@ -21,8 +24,8 @@ export default function Home() {
 						</figure>
 
 						<div className="mt-2">
-							<h1 className="text-4xl font-serif font-bold">Soumak</h1>
-							<p className="mt-2 text-muted-foreground">soumak@yopmail.com</p>
+							<h1 className="text-4xl font-serif font-bold">{user?.name}</h1>
+							<p className="mt-2 text-muted-foreground">{user?.email}</p>
 
 							<Button className="mt-4" variant="outline">
 								Logout
@@ -38,9 +41,9 @@ export default function Home() {
 
 						<div className="grid grid-cols-2 gap-6">
 							<div className="col-span-2">
-								<InfoText label="Full Name" text="Soumak Dutta" />
+								<InfoText label="Full Name" text={user?.name} />
 							</div>
-							<InfoText label="Email address" text="soumak@yopmail.com" />
+							<InfoText label="Email address" text={user?.email} />
 							<InfoText label="Phone No" text="+91 76995 98595" />
 							<InfoText label="Date of birth" text="5th Sept, 1934" />
 							<InfoText label="Gender" text="Male" />

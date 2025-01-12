@@ -5,7 +5,15 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { ReactFormExtendedApi } from '@tanstack/react-form'
 
-export default function BasicInfoForm({ form, onNext }: { form: ReactFormExtendedApi<IFormData>; onNext: () => void }) {
+export default function BasicInfoForm({
+	form,
+	onNext,
+	onSkip,
+}: {
+	form: ReactFormExtendedApi<IFormData>
+	onNext: () => void
+	onSkip: () => void
+}) {
 	async function handleNext() {
 		// const errors = await form.validateField('phone', 'change')
 		onNext()
@@ -55,7 +63,7 @@ export default function BasicInfoForm({ form, onNext }: { form: ReactFormExtende
 					Next
 				</Button>
 
-				<Button size="lg" variant="outline" className="w-full">
+				<Button size="lg" variant="outline" className="w-full" onClick={onSkip}>
 					Skip
 				</Button>
 			</div>

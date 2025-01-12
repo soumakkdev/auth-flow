@@ -3,7 +3,7 @@ import type { ICreateUser } from '../types/auth.ts'
 
 export default class UserServices {
 	static async getUserByEmail(email: string) {
-		return await prisma.users.findUnique({
+		return await prisma.user.findUnique({
 			where: {
 				email,
 			},
@@ -11,7 +11,7 @@ export default class UserServices {
 	}
 
 	static async getUserById(id: string) {
-		return await prisma.users.findUnique({
+		return await prisma.user.findUnique({
 			where: {
 				id,
 			},
@@ -21,12 +21,13 @@ export default class UserServices {
 				email: true,
 				createdAt: true,
 				updatedAt: true,
+				profile: true,
 			},
 		})
 	}
 
 	static async createUser(user: ICreateUser) {
-		return await prisma.users.create({
+		return await prisma.user.create({
 			data: {
 				email: user.email,
 				name: user.name,
